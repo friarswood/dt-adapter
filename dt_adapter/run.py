@@ -39,15 +39,13 @@ def main():
     reading = fake_reading()
 
     for s in sensors:
-      print(s.device_id)
       if s.labels["virtual-sensor"] == "pressure" and s.device_type == "temperature":
         data = dt.events.Temperature(celsius=reading["pressure"], timestamp=reading["timestamp"])
       elif s.labels["virtual-sensor"] == "humidity" and s.device_type == "humidity":
         data = dt.events.Humidity(celsius=reading["temperature"], relative_humidity=reading["humidity"], timestamp=reading["timestamp"])
       else:
-        print(s)
         continue
-      print(data)
+      print("updating %s" % s.device_id)
       err = dt.Emulator.publish_event(s.device_id, project_id, data=data)
       assert not err, str(err)
 
