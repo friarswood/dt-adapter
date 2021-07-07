@@ -1,0 +1,8 @@
+.venv
+
+.eggs
+.git
+build
+*.so
+__pycache__/
+dt_adapter.egg-info/
