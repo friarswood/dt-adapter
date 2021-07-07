@@ -12,9 +12,28 @@ using namespace std::string_literals;
 py::dict read_sensor() 
 {
   py::dict result;
-  result["temperature"] = 20.0;
-  result["humidity"] = 0.5;
-  result["pressure"] = 1000.0;
+
+  double t, p, h;
+  std::string timestamp;
+    
+  Sensors::Status::value status = Global::instance<Sensors>().get(timestamp, t, p, h);
+
+  result["status"] = Sensors::statusToString(status);
+  result["time"] = timestamp;
+
+  if (status != Sensors::Status::NO_IMU)
+  {
+    result["temperature"] = t;
+    if (!(status & Sensors::Status::NO_PRESSURE))
+    {
+      result["temperature"] = t;
+      result["pressure"] = p;
+    }
+    if (!(status & Sensors::Status::NO_HUMIDITY))
+    {
+      result["humidity"] = h;
+    }
+  }
 
   return result;
 }

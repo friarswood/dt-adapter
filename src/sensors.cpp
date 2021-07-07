@@ -1,6 +1,6 @@
 
 #include "sensors.h"
-#include "utils/Log.h" 
+//#include "utils/Log.h" 
 
 #include <memory>
 #include <ctime>
@@ -19,9 +19,9 @@ const char* timeStr(const std::chrono::system_clock::time_point t)
 {
   time_t tt = std::chrono::system_clock::to_time_t(t);
   struct tm* ttt;
-  ttt = localtime(&tt);
+  ttt = gmtime(&tt);
   static char buffer[32];
-  strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", ttt);
+  strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%SZ", ttt);
   return buffer;
 }
 
@@ -85,16 +85,12 @@ Sensors::Sensors() : m_status(0)
     m_status = m_status | Status::NO_HUMIDITY;
   }
   
-  m_log.open("./weather.log", std::ios_base::app);
-
   //  poll at the rate recommended by the IMU
   usleep(m_imu->IMUGetPollInterval() * 1000);
 }
 
 Sensors::~Sensors()
 {
-  // unique ptrs should take care of cleanup?
-  m_log.close();
 }
 
 Sensors::Status::value Sensors::get(std::string& timestamp, double& t, double& p, double& h)
@@ -125,7 +121,6 @@ Sensors::Status::value Sensors::get(std::string& timestamp, double& t, double& p
     }  
   }
   
-  m_log << format("%%, %%, %%, %%, %%", timestamp, statusToString(m_status).c_str(), t, p, h) << std::endl;
   return m_status;
 }
 

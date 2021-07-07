@@ -3,7 +3,6 @@
 #include "utils/Global.h"
 #include "RTIMULib.h"
 #include <string>
-#include <fstream>
 
 class Sensors 
 {
@@ -33,12 +32,12 @@ private:
 
   Sensors();
     
-	friend Sensors& Global::instance<Sensors>();
+  friend Sensors& Global::instance<Sensors>();
 
   std::unique_ptr<RTIMUSettings> m_settings;
   std::unique_ptr<RTIMU> m_imu;
   std::unique_ptr<RTPressure> m_pressure;
   std::unique_ptr<RTHumidity> m_humidity;
   Status::value m_status;
-  std::ofstream m_log;
 };
+
