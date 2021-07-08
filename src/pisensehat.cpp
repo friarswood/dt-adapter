@@ -99,7 +99,9 @@ py::dict PiSenseHat::read() const
   result["status"] = PiSenseHat::statusToString(m_status);
   result["timestamp"] = utcStr(std::chrono::system_clock::now());
 
+#ifndef SENSOR_STUB
   while (!(m_status & Status::NO_IMU) && m_imu->IMURead())
+#endif
   {
     RTIMU_DATA imuData = m_imu->getIMUData();
 

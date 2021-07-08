@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef SENSOR_STUB
+#include "RTIMULib_stub.h"
+#else
 #include "RTIMULib.h"
+#endif 
 
 #include <pybind11/pybind11.h>
 

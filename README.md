@@ -15,26 +15,16 @@ Periodicially broadcasts readings to emulated devices in DT studio, using labels
 
 (Ras Pi 3 is very slow and only has console access.) 
 
-You can stub the sensor if necessary. In pisensehat.h, change
+You can stub the sensor if necessary by setting the SENSOR_STUB env var (to any value)
 
-```cpp
-#include "RTIMULib.h"
+e.g 
+
+```sh
+SENSOR_STUB=1 setup.py develop
 ```
 
-to
+or
 
-```cpp
-#include "RTIMULib_stub.h"
 ```
-
-And in setup.py comment out the line
-
-```python
-extra_link_args = ['-lRTIMULib']
-```
-
-and comment out this while condition in `pisensehat::read`, otherwise will get stuck in an infinite loop
-
-```cpp
-  while (!(m_status & Status::NO_IMU) && m_imu->IMURead())
+SENSOR_STUB=1 pip install -e .
 ```
