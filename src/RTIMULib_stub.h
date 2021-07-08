@@ -12,8 +12,8 @@ inline const int RTIMU_TYPE_NULL = 0;
 struct RTIMU_DATA
 {
   double pressure = 0.0;
-  double temperature = -273.15;
-  double humidity = -1.0;
+  double temperature = -270.85;
+  double humidity = 0.0;
 };
 
 struct RTIMU

@@ -30,7 +30,7 @@ setup(
   packages=find_packages(),
   ext_modules=ext_modules,
   scripts=[
-    "run.py"
+    "transmit.py"
   ],
   include_package_data=True,
   zip_safe=False,
