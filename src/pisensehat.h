@@ -21,6 +21,8 @@ public:
     static const value NO_IMU = 4;
   };
 
+  py::str status() const;
+
   py::dict read() const;
 
   PiSenseHat();

@@ -5,9 +5,9 @@ import subprocess
 
 ext_modules = [
   Pybind11Extension(
-    'pisensehat',
+    '_pisensehat',
     sources=["src/pymodule.cpp", "src/pisensehat.cpp"],
-    depends=["setup.py", "dt_adapter/__init__.py"],
+    depends=["src/pisensehat.h", "setup.py", "dt_adapter/__init__.py"],
     extra_link_args = ['-lRTIMULib'],
     cxx_std=17
   )

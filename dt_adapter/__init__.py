@@ -1,7 +1,6 @@
 __version__ = "0.0.0"
 
-import pisensehat
-from . import stub
+from _pisensehat import PiSenseHat
 from dotenv import load_dotenv
 
 SENSOR_NAME = "pisensehat"

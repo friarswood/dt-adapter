@@ -88,10 +88,15 @@ PiSenseHat::~PiSenseHat()
 {
 }
 
-py::dict PiSenseHat::read() const;
+py::str PiSenseHat::status() const
+{
+  return PiSenseHat::statusToString(m_status);
+}
+
+py::dict PiSenseHat::read() const
 {
   py::dict result;
-  result["status"] = statusToString()
+  result["status"] = PiSenseHat::statusToString(m_status);
   result["timestamp"] = utcStr(std::chrono::system_clock::now());
 
   while (!(m_status & Status::NO_IMU) && m_imu->IMURead())
