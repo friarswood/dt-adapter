@@ -11,6 +11,7 @@ PYBIND11_MODULE(_pisensehat, m)
 
   py::class_<PiSenseHat>(m, "PiSenseHat")
     .def(py::init<>(), "construct")
+    .def("type", &PiSenseHat::type, "Get sensor id")
     .def("status", &PiSenseHat::status, "Get sensor status")
     .def("read", &PiSenseHat::read, "Read data from sensor");
 }

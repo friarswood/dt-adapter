@@ -6,7 +6,6 @@ import disruptive as dt
 
 import dt_adapter
 
-
 def main():
 
   project_id = os.getenv("DT_PROJECT")

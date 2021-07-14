@@ -4,7 +4,7 @@
 #include "RTIMULib_stub.h"
 #else
 #include "RTIMULib.h"
-#endif 
+#endif
 
 #include <pybind11/pybind11.h>
 
@@ -24,6 +24,8 @@ public:
     static const value NO_HUMIDITY = 2;
     static const value NO_IMU = 4;
   };
+
+  py::str type() const;
 
   py::str status() const;
 

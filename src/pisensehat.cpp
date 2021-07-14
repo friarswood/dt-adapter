@@ -88,6 +88,11 @@ PiSenseHat::~PiSenseHat()
 {
 }
 
+py::str PiSenseHat::type() const
+{
+  return m_imu->IMUName();
+}
+
 py::str PiSenseHat::status() const
 {
   return PiSenseHat::statusToString(m_status);

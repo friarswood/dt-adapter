@@ -20,7 +20,8 @@ struct RTIMU
 {
   static RTIMU* createIMU(const RTIMUSettings*) { return new RTIMU;}
   bool IMUInit() const { return true; }
-  int IMUType() const { return 1; }
+  int IMUType() const { return -1; }
+  const char* IMUName() { return "IMUstub";}
   void setSlerpPower(double) { }
   void setGyroEnable(bool) { }
   void setAccelEnable(bool) { }

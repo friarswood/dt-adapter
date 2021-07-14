@@ -13,14 +13,14 @@ Periodicially broadcasts readings to emulated devices in DT studio, using labels
 
 ## developing on platform with no sensor
 
-(Ras Pi 3 is very slow and only has console access.) 
+(Ras Pi 3 is very slow and only has console access.)
 
 You can stub the sensor if necessary by setting the SENSOR_STUB env var (to any value)
 
-e.g 
+e.g
 
 ```sh
-SENSOR_STUB=1 setup.py develop
+SENSOR_STUB=1 python setup.py develop
 ```
 
 or

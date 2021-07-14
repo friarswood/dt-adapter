@@ -1,8 +1,11 @@
-from dt_adapter import PiSenseHat
+from dt_adapter import PiSenseHat, get_device_id
 
 def test_pisensehat():
 
   pisensehat = PiSenseHat()
+
+  print(pisensehat.type())
+  print(get_device_id())
 
   assert pisensehat.status() == "OK"
 
