@@ -19,7 +19,8 @@ def main():
 
   while True:
 
-    vsensors = dt.Device.list_devices(project_id, label_filters={"virtual-sensor": "", "external_id": dt_adapter.SENSOR_NAME})
+    label_filters={"virtual-sensor": "", "type": dt_adapter.SENSOR_NAME, "external_id": dt_adapter.get_device_id()}
+    vsensors = dt.Device.list_devices(project_id, label_filters=label_filters)
 
     reading = pisensehat.read()
     status_msg = f"sensor status={reading['status']} @ {reading['timestamp']}"
