@@ -1,6 +1,5 @@
 
 import os
-from datetime import date, datetime
 from time import sleep
 import disruptive as dt
 
