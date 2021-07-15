@@ -7,6 +7,7 @@ def test_pisensehat():
   print(pisensehat.type())
   print(get_device_id())
 
+  assert get_device_id() == pisensehat.id()
   assert pisensehat.status() == "OK"
 
   readings = pisensehat.read()
