@@ -4,6 +4,9 @@ from time import sleep
 import disruptive as dt
 
 import logging
+logging.captureWarnings(True)
+FORMAT = '%(asctime)s; %(levelname)s; %(funcName)s [%(filename)s:%(lineno)s]; %(message)s'
+logging.basicConfig(format=FORMAT, level=logging.INFO)
 
 import dt_adapter
 
@@ -35,7 +38,7 @@ def main():
             data = dt.events.Humidity(celsius=reading["temperature"], relative_humidity=reading["humidity"], timestamp=reading["timestamp"])
           else:
             continue
-          print("updating %s" % vs.device_id)
+          logging.info("updating %s" % vs.device_id)
           err = dt.Emulator.publish_event(vs.device_id, project_id, data=data)
           assert not err, str(err)
         else:
