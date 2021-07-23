@@ -21,6 +21,8 @@ def main():
 
   pisensehat = dt_adapter.PiSenseHat()
 
+  dt_adapter.startup(project_id)
+
   label_filters={"virtual-sensor": "", "type": dt_adapter.SENSOR_NAME, "external_id": dt_adapter.get_device_id()}
   while True:
     try:
