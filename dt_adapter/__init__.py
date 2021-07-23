@@ -1,6 +1,6 @@
 __version__ = "0.1.0"
 
-from .startup import startup
+from .startup import startup, get_device_id
 from _pisensehat import PiSenseHat
 from dotenv import load_dotenv
 

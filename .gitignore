@@ -8,3 +8,4 @@ __pycache__/
 dt_adapter.egg-info/
 .env
 transmit.log
+dist/

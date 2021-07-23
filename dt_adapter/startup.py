@@ -3,7 +3,6 @@ import atexit
 import signal
 import logging
 
-import pandas as pd
 import disruptive as dt
 
 
