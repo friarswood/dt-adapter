@@ -7,7 +7,7 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(_pisensehat, m)
 {
-  m.doc() = "pybind11 bindings for Pi sense hat";
+  m.doc() = "pybind11 bindings for Pi sense hat (LSM9DS1)";
 
   py::class_<PiSenseHat>(m, "PiSenseHat")
     .def(py::init<>(), "construct")

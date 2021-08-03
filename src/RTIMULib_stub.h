@@ -1,5 +1,5 @@
 
-// stub for developing on a platform with no sensor installed
+// stub for developing/testing on a platform with no sensor installed
 
 struct RTIMUSettings
 {
@@ -21,7 +21,7 @@ struct RTIMU
   static RTIMU* createIMU(const RTIMUSettings*) { return new RTIMU;}
   bool IMUInit() const { return true; }
   int IMUType() const { return -1; }
-  const char* IMUName() { return "IMUstub";}
+  const char* IMUName() { return "IMU-STUB";}
   void setSlerpPower(double) { }
   void setGyroEnable(bool) { }
   void setAccelEnable(bool) { }

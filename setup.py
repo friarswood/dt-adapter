@@ -1,18 +1,19 @@
 import os
 from setuptools import find_packages, setup
 from pybind11.setup_helpers import Pybind11Extension
-from setuptools.command.build_ext import build_ext
-import subprocess
+
 
 def get_defines():
   if os.getenv("SENSOR_STUB"):
-    return [("SENSOR_STUB","")]
+    return [("SENSOR_STUB", "")]
   return None
+
 
 def get_libs():
   if os.getenv("SENSOR_STUB"):
     return None
   return ['-lRTIMULib']
+
 
 ext_modules = [
   Pybind11Extension(
@@ -42,4 +43,3 @@ setup(
   ],
   tests_require=["pytest"]
 )
-

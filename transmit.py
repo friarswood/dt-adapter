@@ -1,3 +1,4 @@
+import dt_adapter
 
 import os
 from time import sleep
@@ -8,10 +9,8 @@ logging.captureWarnings(True)
 FORMAT = '%(asctime)s; %(levelname)s; %(funcName)s [%(filename)s:%(lineno)s]; %(message)s'
 logging.basicConfig(format=FORMAT, level=logging.INFO)
 
-import dt_adapter
 
 def main():
-
   project_id = os.getenv("DT_PROJECT")
   svc_key = os.getenv("DT_SVC_KEY")
   svc_secret = os.getenv("DT_SVC_SECRET")
@@ -21,9 +20,9 @@ def main():
 
   pisensehat = dt_adapter.PiSenseHat()
 
-  dt_adapter.startup(project_id)
+  dt_adapter.startup(project_id, pisensehat.type())
 
-  label_filters={"virtual-sensor": "", "type": dt_adapter.SENSOR_NAME, "external_id": dt_adapter.get_device_id()}
+  label_filters = {"provider": "friarswood", "virtual-sensor": "", "type": pisensehat.type(), "external_id": dt_adapter.get_device_id()}
   while True:
     try:
       vsensors = dt.Device.list_devices(project_id, label_filters=label_filters)
@@ -31,6 +30,9 @@ def main():
       reading = pisensehat.read()
       status_msg = f"sensor status={reading['status']} @ {reading['timestamp']}"
       logging.info(status_msg)
+
+      if not vsensors:
+        logging.error(f"no virtual sensor found for {pisensehat.type()} {dt_adapter.get_device_id()}")
 
       for vs in vsensors:
         if reading["status"] == "OK":
@@ -40,7 +42,7 @@ def main():
             data = dt.events.Humidity(celsius=reading["temperature"], relative_humidity=reading["humidity"], timestamp=reading["timestamp"])
           else:
             continue
-          logging.info("updating %s" % vs.device_id)
+          logging.info(f"updating {vs.device_id}")
           err = dt.Emulator.publish_event(vs.device_id, project_id, data=data)
           assert not err, str(err)
         else:
