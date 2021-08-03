@@ -30,7 +30,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install pybind11 pytest flake8
-        python -m pip install *.whl
     - name: Build
       run: |
         python -m pip install -e .
