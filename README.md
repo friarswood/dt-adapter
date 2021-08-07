@@ -1,5 +1,7 @@
 # dt-adapter
 
+[![build, lint and test](https://github.com/friarswood/dt-adapter/actions/workflows/build-lint-test.yaml/badge.svg)](https://github.com/friarswood/dt-adapter/actions/workflows/build-lint-test.yaml)
+
 Demonstration of a software adapter to give 3rd party sensor support in DT Studio.
 
 External sensor is a Raspberry Pi + Sense Hat (Pressure, temperature, humidity, accelerometer, compass)
