@@ -1,20 +1,28 @@
 import os
-from dt_adapter import PiSenseHat, get_device_id
+from dt_adapter import pisensehat
+
+def get_device_id():
+  try:
+    with open("/proc/device-tree/hat/uuid", "r") as fd:
+      return fd.read().rstrip("\x00")
+  except Exception:
+    return "00000000-0000-0000-0000-000000000000"
+
 
 
 def test_pisensehat():
 
-  pisensehat = PiSenseHat()
+  sensor = pisensehat.Sensor()
 
   if os.getenv("SENSOR_STUB"):
-    assert pisensehat.type() == "IMU-STUB"
+    assert sensor.type() == "IMU-STUB"
   else:
-    assert pisensehat.type() == "LSM9DS1"
+    assert sensor.type() == "LSM9DS1"
 
-  assert get_device_id() == pisensehat.id()
-  assert pisensehat.status() == "OK"
+  assert sensor.id() == get_device_id()
+  assert sensor.status() == "OK"
 
-  readings = pisensehat.read()
+  readings = sensor.read()
 
   print(readings)
 

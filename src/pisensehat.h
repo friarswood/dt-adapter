@@ -25,6 +25,8 @@ public:
     static const value NO_IMU = 4;
   };
 
+  py::str id() const;
+
   py::str type() const;
 
   py::str status() const;
@@ -44,6 +46,7 @@ public:
 
 private:
 
+  std::string m_id;
   std::unique_ptr<RTIMUSettings> m_settings;
   std::unique_ptr<RTIMU> m_imu;
   std::unique_ptr<RTPressure> m_pressure;

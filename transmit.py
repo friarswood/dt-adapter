@@ -3,6 +3,8 @@ import dt_adapter
 import os
 from time import sleep
 import disruptive as dt
+import argparse
+#import json
 
 import logging
 logging.captureWarnings(True)
@@ -10,7 +12,7 @@ FORMAT = '%(asctime)s; %(levelname)s; %(funcName)s [%(filename)s:%(lineno)s]; %(
 logging.basicConfig(format=FORMAT, level=logging.INFO)
 
 
-def main():
+def run(module, update_period):
   project_id = os.getenv("DT_PROJECT")
   svc_key = os.getenv("DT_SVC_KEY")
   svc_secret = os.getenv("DT_SVC_SECRET")
@@ -18,21 +20,21 @@ def main():
 
   dt.default_auth = dt.Auth.service_account(svc_key, svc_secret, svc_email)
 
-  pisensehat = dt_adapter.PiSenseHat()
+  sensor = dt_adapter.pisensehat.Sensor()
 
-  dt_adapter.startup(project_id, pisensehat.type())
+  dt_adapter.startup(project_id, sensor.type())
 
-  label_filters = {"provider": "friarswood", "virtual-sensor": "", "type": pisensehat.type(), "external_id": dt_adapter.get_device_id()}
+  label_filters = {"provider": "friarswood", "virtual-sensor": "", "type": sensor.type(), "external_id": sensor.id()}
   while True:
     try:
       vsensors = dt.Device.list_devices(project_id, label_filters=label_filters)
 
-      reading = pisensehat.read()
+      reading = sensor.read()
       status_msg = f"sensor status={reading['status']} @ {reading['timestamp']}"
       logging.info(status_msg)
 
       if not vsensors:
-        logging.error(f"no virtual sensor found for {pisensehat.type()} {dt_adapter.get_device_id()}")
+        logging.error(f"no virtual sensor found for {sensor.type()} {sensor.id()}")
 
       for vs in vsensors:
         if reading["status"] == "OK":
@@ -49,10 +51,15 @@ def main():
           err = dt.Device.set_label(vs.device_id, project_id, "error", status_msg)
           assert not err, str(err)
 
-      sleep(dt_adapter.UPDATE_PERIOD)
     except Exception as e:
       logging.error(f"{e.__class__.__name__}: {str(e)}")
+    sleep(update_period)
 
 
 if __name__ == "__main__":
-  main()
+  parser = argparse.ArgumentParser(description="push sensor readings to DT cloud")
+  parser.add_argument("-s", "--sensor", type=str, required=True, help="sensor module name")
+  parser.add_argument("-u", "--update", type=int, required=True, help="update period (seconds)")
+  args = parser.parse_args()
+
+  run(args.sensor, args.update)
