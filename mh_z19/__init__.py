@@ -1,5 +1,5 @@
 
-#import mh_z19
+# import mh_z19
 
 class Sensor:
   """ CO2 sensor """
@@ -16,6 +16,4 @@ class Sensor:
     return "?"
 
   def read(_self) -> dict:
-    return { "co2_ppm": 100 }
-
-
+    return {"co2_ppm": 100}

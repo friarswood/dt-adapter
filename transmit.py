@@ -4,7 +4,6 @@ import os
 from time import sleep
 import disruptive as dt
 import argparse
-#import json
 
 import logging
 logging.captureWarnings(True)
