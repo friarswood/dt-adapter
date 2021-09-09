@@ -54,6 +54,8 @@ PiSenseHat::PiSenseHat() : m_id("00000000-0000-0000-0000-000000000000"), m_statu
   if (dev)
   {
     std::getline(dev, m_id);
+    while(!m_id.back())
+      m_id.pop_back();
   }
 
   //  This is an opportunity to manually override any settings before the call IMUInit

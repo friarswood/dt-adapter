@@ -1,8 +1,13 @@
-from dt_adapter import mh_z19
+from dt_adapter import get_driver
+from importlib import import_module
 
 
 def test_mh_z19():
-  sensor = mh_z19.Sensor()
+
+  module = "dt_adapter"
+  class_ = "mh_z19.Sensor"
+
+  sensor = get_driver(module, class_)
 
   assert sensor.type() == "MH-Z19"
 

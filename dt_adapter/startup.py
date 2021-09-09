@@ -32,6 +32,8 @@ def startup(project_id, device_type):
   if not driver:
     driver = [dt.Emulator.create_device(project_id, device_type=dt.Device.CLOUD_CONNECTOR, display_name="Fw3rdPartySensorDriver", labels=labels)]
   vccon_id = driver[0].device_id
+  # update version
+  dt.Device.set_label(vccon_id, project_id, "version", dt_adapter.__version__)
 
   # register function to call if terminating (ctrl-C)
   atexit.register(shutdown)

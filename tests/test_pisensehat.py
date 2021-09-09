@@ -1,6 +1,5 @@
 import os
-from dt_adapter import pisensehat
-
+from dt_adapter import get_driver
 
 def get_device_id():
   try:
@@ -12,7 +11,10 @@ def get_device_id():
 
 def test_pisensehat():
 
-  sensor = pisensehat.Sensor()
+  module = "dt_adapter"
+  class_ = "pisensehat.Sensor"
+
+  sensor = get_driver(module, class_)
 
   if os.getenv("SENSOR_STUB"):
     assert sensor.type() == "IMU-STUB"
