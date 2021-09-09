@@ -1,5 +1,4 @@
 from dt_adapter import get_driver
-from importlib import import_module
 
 
 def test_mh_z19():

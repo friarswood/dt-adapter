@@ -1,6 +1,7 @@
 import os
 from dt_adapter import get_driver
 
+
 def get_device_id():
   try:
     with open("/proc/device-tree/hat/uuid", "r") as fd:

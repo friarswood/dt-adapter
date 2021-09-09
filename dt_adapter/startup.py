@@ -5,6 +5,8 @@ import logging
 
 import disruptive as dt
 
+import dt_adapter
+
 
 vccon_id = None
 

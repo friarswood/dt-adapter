@@ -63,4 +63,4 @@ if __name__ == "__main__":
   args = parser.parse_args()
 
   print(args)
-  run(args.module, getattr(args,"class"), args.update)
+  run(args.module, getattr(args, "class"), args.update)
