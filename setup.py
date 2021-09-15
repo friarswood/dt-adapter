@@ -38,7 +38,6 @@ setup(
   setup_requires=['pybind11>=2.6.0', 'pytest-runner', 'wheel'],
   install_requires=[
     'requests',
-    'disruptive',
     'python-dotenv',
   ],
   tests_require=["pytest"]
