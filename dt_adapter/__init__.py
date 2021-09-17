@@ -2,14 +2,10 @@ __version__ = "2.0.0"
 
 import os
 import _pisensehat as pisensehat
-import mh_z19
+import mh_z19_adapter
 from importlib import import_module
 from hashlib import sha1
 import jwt
-
-
-from dotenv import load_dotenv
-load_dotenv()
 
 
 def get_driver(module, class_):

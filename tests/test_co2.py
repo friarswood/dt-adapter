@@ -4,13 +4,13 @@ from dt_adapter import get_driver
 def test_mh_z19():
 
   module = "dt_adapter"
-  class_ = "mh_z19.Sensor"
+  class_ = "mh_z19_adapter.Sensor"
 
   sensor = get_driver(module, class_)
 
-  assert sensor.type() == "MH-Z19"
+  assert sensor.type() == "MH-Z19C"
 
-  assert sensor.id() == "0000"
+  assert sensor.id() == "testing123"
   assert sensor.status()
 
   readings = sensor.read()
