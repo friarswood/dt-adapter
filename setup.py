@@ -39,6 +39,7 @@ setup(
   install_requires=[
     'requests',
     'pyjwt',
+    'numpy',
     'python-dotenv',
   ],
   tests_require=["pytest"]
