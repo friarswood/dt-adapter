@@ -36,7 +36,7 @@ ext_modules = [
   Pybind11Extension(
     '_mh_z19c',
     sources=["src/mh-z19c/pymodule.cpp", "src/mh-z19c/mh-z19c.cpp"],
-    depends=["src/mh-z19c/mh-z19c.h", "src/mh-z19c/wiringPi_stub.h", "setup.py", "dt_adapter/__init__.py"],
+    depends=["src/mh-z19c/mh-z19c.h", "setup.py", "dt_adapter/__init__.py"],
     define_macros=get_defines("HAVE_MH_Z19C"),
     extra_link_args=get_libs("HAVE_MH_Z19C"),
     cxx_std=17

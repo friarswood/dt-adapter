@@ -2,16 +2,12 @@
 
 #include "mh-z19c.h"
 
-namespace serial {
 #ifdef HAVE_MH_Z19C
 #include <wiringPi.h>
 #include <wiringSerial.h>  //only needed for serialOpen
 #include <unistd.h> // needed for read and write
 #include <termios.h>
-#else
-#include "wiringPi_stub.h" // somehow the read here gets deleted
 #endif
-}
 
 #include <array>
 
@@ -63,13 +59,13 @@ MH_Z19C::MH_Z19C()
   : m_response_buffer{0}
 {
 #ifdef HAVE_MH_Z19C
+  // port is hard-coded...
   m_id = "TODO...";
+  m_fd = serialOpen("/dev/serial0", 9600);
 #else
   m_id = "testing123";
+  m_fd = 0;
 #endif
-
-  // port is hard-coded...
-  m_fd = serial::serialOpen("/dev/serial0", 9600);
   if (m_fd < 0)
   {
     throw std::runtime_error("Unable to open device");
@@ -112,16 +108,25 @@ py::dict MH_Z19C::reading()
   result["status"] = status();
   result["timestamp"] = utcStr(std::chrono::system_clock::now());
 
-  size_t n = serial::write(m_fd, REQUEST_READING.data(), REQUEST_READING.size());
+#ifdef HAVE_MH_Z19C
+  size_t n = write(m_fd, REQUEST_READING.data(), REQUEST_READING.size());
   if (n != MSG_LEN)
   {
     throw std::runtime_error("invalid number of bytes written: "s + std::to_string(n));
   }
 
-  if (serial::read(m_fd, m_response_buffer.data(), m_response_buffer.size()) != MSG_LEN)
+  n = read(m_fd, m_response_buffer.data(), m_response_buffer.size());
+  if ( != MSG_LEN)
   {
-    throw std::runtime_error("invalid number of bytes read");
+    throw std::runtime_error("invalid number of bytes read: "s + std::to_string(n));
   }
+#else
+  // ramp up from 400 to 655 then back to 400
+  static byte counter = 0;
+  m_response_buffer[2] = byte((400 + counter) >> 8);
+  m_response_buffer[3] = byte((400 + counter) & 0xff);
+  ++counter;
+#endif
 
   result["co2"] = m_response_buffer[2] * 256 +  m_response_buffer[3];
 
