@@ -17,10 +17,10 @@ def test_pisensehat():
 
   sensor = get_driver(module, class_)
 
-  if os.getenv("SENSOR_STUB"):
-    assert sensor.type() == "IMU-STUB"
-  else:
+  if os.getenv("HAVE_PISENSEHAT"):
     assert sensor.type() == "LSM9DS1"
+  else:
+    assert sensor.type() == "IMU-STUB"
 
   assert sensor.id() == get_device_id()
   assert sensor.status() == "OK"

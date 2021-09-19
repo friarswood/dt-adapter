@@ -11,7 +11,6 @@ PYBIND11_MODULE(_pisensehat, m)
 
   py::class_<PiSenseHat>(m, "Sensor")
     .def(py::init<>(), "construct")
-    // calls back to python for the MTU ID
     .def("id", &PiSenseHat::id, "Get sensor id")
     .def("type", &PiSenseHat::type, "Get sensor type")
     .def("status", &PiSenseHat::status, "Get sensor status")

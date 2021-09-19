@@ -1,9 +1,9 @@
 #pragma once
 
-#ifdef SENSOR_STUB
-#include "RTIMULib_stub.h"
-#else
+#ifdef HAVE_PISENSEHAT
 #include "RTIMULib.h"
+#else
+#include "RTIMULib_stub.h"
 #endif
 
 #include <pybind11/pybind11.h>

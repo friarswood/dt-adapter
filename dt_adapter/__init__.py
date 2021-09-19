@@ -2,7 +2,7 @@ __version__ = "2.0.0"
 
 import os
 import _pisensehat as pisensehat
-import mh_z19_adapter
+import _mh_z19c as mh_z19c
 from importlib import import_module
 from hashlib import sha1
 import jwt

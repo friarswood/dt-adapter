@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  SENSOR_STUB: 1
-
 jobs:
   build:
 
