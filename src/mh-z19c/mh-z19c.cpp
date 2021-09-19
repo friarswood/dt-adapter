@@ -116,7 +116,7 @@ py::dict MH_Z19C::reading()
   }
 
   n = read(m_fd, m_response_buffer.data(), m_response_buffer.size());
-  if ( != MSG_LEN)
+  if (n != MSG_LEN)
   {
     throw std::runtime_error("invalid number of bytes read: "s + std::to_string(n));
   }

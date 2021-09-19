@@ -40,7 +40,8 @@ def run(module, class_, url, update_period):
 
     except Exception as e:
       logging.error(f"{e.__class__.__name__}: {str(e)}")
-      sleep(update_period)
+
+    sleep(update_period)
 
 
 if __name__ == "__main__":

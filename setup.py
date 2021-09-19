@@ -11,7 +11,7 @@ def get_defines(env):
 def get_libs(env):
   libs = {
     "HAVE_PISENSEHAT": ["-lRTIMULib"],
-    "HAVE_MH_Z19C": ["lwiringPi"]
+    "HAVE_MH_Z19C": ["-lwiringPi"]
   }
   if os.getenv(env):
     return libs.get(env)
