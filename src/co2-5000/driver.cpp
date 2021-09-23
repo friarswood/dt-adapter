@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#ifdef HAVE_MH_Z19C
+#ifdef HAVE_CO2_5000
 #include <wiringPi.h>
 #include <wiringSerial.h>  //only needed for serialOpen
 #include <unistd.h> // needed for read and write
@@ -102,12 +102,12 @@ bool check_crc(uint8_t *data, uint16_t len)
 // TODO check endianness...
 float as_float(const uint8_t* p)
 {
-  return *reinterpret_cast<float*>(p);
+  return *reinterpret_cast<const float*>(p);
 }
 
 float as_uint32_t(const uint8_t* p)
 {
-  return *reinterpret_cast<uint32_t*>(p);
+  return *reinterpret_cast<const uint32_t*>(p);
 }
 
 #endif
@@ -126,7 +126,7 @@ CO2_5000::CO2_5000()
 {
 #ifdef HAVE_CO2_5000
   // port is hard-coded...
-  m_id = "TODO...";
+  m_id = "00000000d3c38f28"; // TODO...
   m_fd = serialOpen("/dev/serial0", 9600);
 #else
   m_id = "testing123";
@@ -173,6 +173,8 @@ py::dict CO2_5000::reading()
     throw std::runtime_error("invalid number of bytes written: "s + std::to_string(n));
   }
 
+  delay(100); // give device time to respond
+
   // e.g. 64 69 01 01 D5 9E 02 44 00 00 00 00 DA C2
   //       0  1  2  3  4           8          12
   std::array<uint8_t, 14> response;
@@ -183,7 +185,7 @@ py::dict CO2_5000::reading()
     throw std::runtime_error("invalid number of bytes read: "s + std::to_string(n));
   }
 
-  if (!check_crc(response))
+  if (!check_crc(response.data(),response.size()))
   {
     throw std::runtime_error("device response CRC invalid");
   }
@@ -191,7 +193,7 @@ py::dict CO2_5000::reading()
   uint32_t error = as_uint32_t(response.data() + 8);
   if (error)
   {
-    throw std::runtime_error("device response data invalid, code "_s + std::to_string(error));
+    throw std::runtime_error("device response data invalid, code "s + std::to_string(error));
   }
 
   result["co2"] = as_float(response.data() + 4);
@@ -202,9 +204,8 @@ py::dict CO2_5000::reading()
   m_response_buffer[2] = uint8_t((400 + counter) >> 8);
   m_response_buffer[3] = uint8_t((400 + counter) & 0xff);
   ++counter;
-#endif
-
   result["co2"] = m_response_buffer[2] * 256 +  m_response_buffer[3];
+#endif
 
   return result;
 }
