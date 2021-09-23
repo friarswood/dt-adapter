@@ -4,11 +4,11 @@ from dt_adapter import get_driver
 def test_mh_z19():
 
   module = "dt_adapter"
-  class_ = "mh_z19c.Sensor"
+  class_ = "co2_5000.Sensor"
 
   sensor = get_driver(module, class_)
 
-  assert sensor.type().startswith("MH-Z19C")
+  assert sensor.type().startswith("CO2-5000")
 
   assert sensor.id() == "testing123"
   assert sensor.status() == "OK"

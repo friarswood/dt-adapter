@@ -7,7 +7,7 @@ The adapter reads pressure, temperature, and humidity and forwards to the virtua
 ```sh
 python transmit.py -m dt_adapter -c pisensehat.Sensor -u 300 -s https://fw-dt-vccon.azurewebsites.net/incoming
 ```
-## MH-Z19
+## CO2-5000
 
 This reads CO<sub>2</sub> concentration and and forwards to the virtual cloud connector, which will pass the reading on to a virtual temperature sensor<sup>&ast;</sup>.
 

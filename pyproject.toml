@@ -1,9 +1,9 @@
 [build-system]
 requires = [
-    "setuptools>=42",
-    "wheel",
-    "pybind11>=2.6.0",
-    "pytest"
+  "setuptools>=42",
+  "wheel",
+  "pybind11>=2.6.0",
+  "pytest"
 ]
 
 build-backend = "setuptools.build_meta"
@@ -11,5 +11,5 @@ build-backend = "setuptools.build_meta"
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [
-    "tests"
+  "tests"
 ]

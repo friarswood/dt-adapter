@@ -6,7 +6,7 @@ try:
 except ImportError:
   pass
 try:
-  import _mh_z19c as mh_z19c
+  import _co2_5000 as co2_5000
 except ImportError:
   pass
 from importlib import import_module
