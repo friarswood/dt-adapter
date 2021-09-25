@@ -3,12 +3,12 @@ __version__ = "2.0.0"
 import os
 try:
   import _pisensehat as pisensehat
-except ImportError:
-  pass
+except ImportError as e:
+  print(e)
 try:
   import _co2_5000 as co2_5000
-except ImportError:
-  pass
+except ImportError as e:
+  print(e)
 from importlib import import_module
 from hashlib import sha1
 import jwt

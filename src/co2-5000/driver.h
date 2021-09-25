@@ -2,12 +2,15 @@
 
 #include <pybind11/pybind11.h>
 
+#include <array>
 #include <string>
 
 namespace py = pybind11;
 
 typedef unsigned char byte;
 
+std::array<uint8_t, 2> calc_crc(const uint8_t *data, size_t len);
+bool check_crc(const uint8_t *data, size_t len);
 
 class CO2_5000 final
 {

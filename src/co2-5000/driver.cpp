@@ -21,21 +21,7 @@
 
 using namespace std::string_literals;
 
-namespace {
-
-const char* utcStr(const std::chrono::system_clock::time_point t)
-{
-  time_t tt = std::chrono::system_clock::to_time_t(t);
-  struct tm* ttt;
-  ttt = gmtime(&tt);
-  static char buffer[32];
-  strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%SZ", ttt);
-  return buffer;
-}
-
-#ifdef HAVE_CO2_5000
-
-std::tuple<uint8_t, uint8_t> calc_crc(uint8_t *data, uint16_t len)
+std::array<uint8_t, 2> calc_crc(const uint8_t *data, size_t len)
 {
   uint8_t crc_hi = 0xFF ; /* CRC high byte initialization*/
   uint8_t crc_lo = 0xFF ; /* CRC low byte initialization*/
@@ -93,11 +79,26 @@ std::tuple<uint8_t, uint8_t> calc_crc(uint8_t *data, uint16_t len)
 }
 
 // last 2 bytes are checksum
-bool check_crc(uint8_t *data, uint16_t len)
+bool check_crc(const uint8_t *data, size_t len)
 {
-  auto [lo, hi] = calc_crc(data, len - 2);
-  return lo == data[len-2] && hi == data[len-1];
+  auto crc = calc_crc(data, len - 2);
+  return crc[0] == data[len-2] && crc[1] == data[len-1];
 }
+
+namespace {
+
+const char* utcStr(const std::chrono::system_clock::time_point t)
+{
+  time_t tt = std::chrono::system_clock::to_time_t(t);
+  struct tm* ttt;
+  ttt = gmtime(&tt);
+  static char buffer[32];
+  strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%SZ", ttt);
+  return buffer;
+}
+
+
+#ifdef HAVE_CO2_5000
 
 // TODO check endianness...
 float as_float(const uint8_t* p)
@@ -110,13 +111,14 @@ float as_uint32_t(const uint8_t* p)
   return *reinterpret_cast<const uint32_t*>(p);
 }
 
+
 #endif
 
 }
 
 
 const std::array<uint8_t, 5> REQUEST_CO2{0x64, 0x69, 0x01, 0xDF, 0x8F};
-const std::array<uint8_t, 5> REQUEST_TEMP{0x64, 0x69, 0x01, 0xDF, 0x8F};
+const std::array<uint8_t, 5> REQUEST_TEMP{0x64, 0x69, 0x01, 0x9F, 0x8E};
 // const std::array<uint8_t, MH_Z19C::MSG_LEN> START_CALIBRATION{0xFF,0x01,0x79,0xa0,0x00,0x00,0x00,0x00,0xe6};
 // const std::array<uint8_t, MH_Z19C::MSG_LEN> STOP_CALIBRATION{0xFF,0x01,0x79,0x00,0x00,0x00,0x00,0x00,0x86};
 
