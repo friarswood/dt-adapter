@@ -124,7 +124,6 @@ const std::array<uint8_t, 5> REQUEST_TEMP{0x64, 0x69, 0x01, 0x9F, 0x8E};
 
 
 CO2_5000::CO2_5000()
-  : m_response_buffer{0}
 {
 #ifdef HAVE_CO2_5000
   // port is hard-coded...
@@ -203,10 +202,8 @@ py::dict CO2_5000::reading()
 #else
   // ramp up from 400 to 655 then back to 400
   static uint8_t counter = 0;
-  m_response_buffer[2] = uint8_t((400 + counter) >> 8);
-  m_response_buffer[3] = uint8_t((400 + counter) & 0xff);
+  result["co2"] = 400.0 + counter;
   ++counter;
-  result["co2"] = m_response_buffer[2] * 256 +  m_response_buffer[3];
 #endif
 
   return result;
