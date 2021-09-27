@@ -32,7 +32,7 @@ ext_modules = [
     '_co2_5000',
     sources=["src/common/timestamp.cpp", "src/co2-5000/pymodule.cpp", "src/co2-5000/driver.cpp", "src/co2-5000/picpuserial.cpp"],
     depends=["src/common/timestamp.h", "src/co2-5000/driver.h", "src/co2-5000/picpuserial.h" "setup.py", "dt_adapter/__init__.py"],
-    include_dirs=["src"],
+    include_dirs=["src", "/opt/vc/include"],
     define_macros=get_defines("HAVE_CO2_5000"),
     extra_link_args=get_libs("HAVE_CO2_5000"),
     cxx_std=17
