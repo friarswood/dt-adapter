@@ -1,6 +1,6 @@
 
 #include "pisensehat.h"
-
+#include "common/timestamp.h"
 #include <memory>
 #include <chrono>
 #include <ctime>
@@ -10,16 +10,6 @@ namespace {
 
 // correction for heating from circuitry (depends on CPU usgae)
 const double TEMPERATURE_CORRECTION = 2.3;
-
-const char* utcStr(const std::chrono::system_clock::time_point t)
-{
-  time_t tt = std::chrono::system_clock::to_time_t(t);
-  struct tm* ttt;
-  ttt = gmtime(&tt);
-  static char buffer[32];
-  strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%SZ", ttt);
-  return buffer;
-}
 
 }
 
@@ -116,7 +106,7 @@ py::dict PiSenseHat::read() const
 {
   py::dict result;
   result["status"] = PiSenseHat::statusToString(m_status);
-  result["timestamp"] = utcStr(std::chrono::system_clock::now());
+  result["timestamp"] = utc_now();
 
 #ifdef HAVE_PISENSEHAT
   while (!(m_status & Status::NO_IMU) && m_imu->IMURead())

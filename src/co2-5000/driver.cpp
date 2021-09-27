@@ -1,5 +1,9 @@
+// This is NOT for the winsen MH-Z19C CO2 sensor. It is for the "CO2-5000 carbon dioxide sensor" which I got on eBay, advertised as a MH-Z19C.
+// The seller (https://www.ebay.co.uk/itm/224540799740?hash=item3447acb2fc:g:EawAAOSwZt1gQvWr) provided a Chinese datasheet, which is included.
 
-#include <iostream>
+#include "driver.h"
+#include "picpuserial.h"
+#include "common/timestamp.h"
 
 #ifdef HAVE_CO2_5000
 #include <wiringPi.h>
@@ -8,16 +12,7 @@
 //#include <termios.h>
 #endif
 
-#include <tuple>
 #include <array>
-
-#include <chrono>
-#include <ctime>
-
-// This is NOT for the winsen MH-Z19C CO2 sensor. It is for the "CO2-5000 carbon dioxide sensor" which I got on eBay, advertised as a MH-Z19C.
-// The seller (https://www.ebay.co.uk/itm/224540799740?hash=item3447acb2fc:g:EawAAOSwZt1gQvWr) provided a Chinese datasheet, which is included.
-
-#include "driver.h"
 
 using namespace std::string_literals;
 
@@ -87,16 +82,6 @@ bool check_crc(const uint8_t *data, size_t len)
 
 namespace {
 
-const char* utcStr(const std::chrono::system_clock::time_point t)
-{
-  time_t tt = std::chrono::system_clock::to_time_t(t);
-  struct tm* ttt;
-  ttt = gmtime(&tt);
-  static char buffer[32];
-  strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%SZ", ttt);
-  return buffer;
-}
-
 
 #ifdef HAVE_CO2_5000
 
@@ -119,18 +104,15 @@ float as_uint32_t(const uint8_t* p)
 
 const std::array<uint8_t, 5> REQUEST_CO2{0x64, 0x69, 0x01, 0xDF, 0x8F};
 const std::array<uint8_t, 5> REQUEST_TEMP{0x64, 0x69, 0x01, 0x9F, 0x8E};
-// const std::array<uint8_t, MH_Z19C::MSG_LEN> START_CALIBRATION{0xFF,0x01,0x79,0xa0,0x00,0x00,0x00,0x00,0xe6};
-// const std::array<uint8_t, MH_Z19C::MSG_LEN> STOP_CALIBRATION{0xFF,0x01,0x79,0x00,0x00,0x00,0x00,0x00,0x86};
 
 
 CO2_5000::CO2_5000()
 {
+  m_id = get_cpu_serialno();
 #ifdef HAVE_CO2_5000
-  // port is hard-coded...
-  m_id = "00000000d3c38f28"; // TODO...
+  // port/speed is hard-coded...
   m_fd = serialOpen("/dev/serial0", 9600);
 #else
-  m_id = "testing123";
   m_fd = 0;
 #endif
   if (m_fd < 0)
@@ -165,7 +147,7 @@ py::dict CO2_5000::reading()
 {
   py::dict result;
   result["status"] = status();
-  result["timestamp"] = utcStr(std::chrono::system_clock::now());
+  result["timestamp"] = utc_now();
 
 #ifdef HAVE_CO2_5000
   size_t n = write(m_fd, REQUEST_CO2.data(), REQUEST_CO2.size());
