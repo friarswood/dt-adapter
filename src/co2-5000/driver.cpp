@@ -80,10 +80,14 @@ bool check_crc(const uint8_t *data, size_t len)
   return crc[0] == data[len-2] && crc[1] == data[len-1];
 }
 
-namespace {
 
 
 #ifdef HAVE_CO2_5000
+
+namespace {
+
+const std::array<uint8_t, 5> REQUEST_CO2{0x64, 0x69, 0x01, 0xDF, 0x8F};
+const std::array<uint8_t, 5> REQUEST_TEMP{0x64, 0x69, 0x01, 0x9F, 0x8E};
 
 // TODO check endianness...
 float as_float(const uint8_t* p)
@@ -96,17 +100,50 @@ float as_uint32_t(const uint8_t* p)
   return *reinterpret_cast<const uint32_t*>(p);
 }
 
+uint8_t read_impl(int fd, double& ppm)
+{
+  size_t n = write(fd, REQUEST_CO2.data(), REQUEST_CO2.size());
+  if (n != REQUEST_CO2.size())
+  {
+    return CO2_5000::WRITE_FAILED;
+  }
 
-#endif
+  delay(100); // give device time to respond
+
+  // e.g. 64 69 01 01 D5 9E 02 44 00 00 00 00 DA C2
+  //       0  1  2  3  4           8          12
+  std::array<uint8_t, 14> response;
+
+  n = read(fd, response.data(), response.size());
+  if (n != response.size())
+  {
+    return CO2_5000::READ_FAILED; // this is a host (response) error, for device errors
+  }
+
+  if (!check_crc(response.data(),response.size()))
+  {
+    return CO2_5000::INVALID_CRC;
+  }
+
+  if (as_uint32_t(response.data() + 8))
+  {
+    return CO2_5000::INVALID_DATA;
+  }
+
+  if (response[1] == REQUEST_CO2[1] + 0x80)
+  {
+    return response[2];
+  }
+  ppm = as_float(response.data() + 4);
+  return CO2_5000::OK;
+}
 
 }
 
-
-const std::array<uint8_t, 5> REQUEST_CO2{0x64, 0x69, 0x01, 0xDF, 0x8F};
-const std::array<uint8_t, 5> REQUEST_TEMP{0x64, 0x69, 0x01, 0x9F, 0x8E};
+#endif
 
 
-CO2_5000::CO2_5000()
+CO2_5000::CO2_5000() : m_status(0)
 {
   m_id = get_cpu_serialno();
 #ifdef HAVE_CO2_5000
@@ -139,54 +176,41 @@ py::str CO2_5000::type() const
 
 py::str CO2_5000::status() const
 {
-  // TODO
-  return "OK";
+  switch (m_status)
+  {
+  case OK: return "OK";
+  // errors emanating from device
+  case 0x05 ... 0x6: return "device busy"; // this range syntax is apparently a gcc extension (but works with clang too)
+  case 0x01 ... 0x4:
+  case 0x07 ... 0x10: return "device error " + std::to_string(m_status);
+  // errors emanating from host
+  case WRITE_FAILED: return "error writing to device";
+  case READ_FAILED: return "error reading from device";
+  case INVALID_CRC: return "device response crc invalid";
+  case INVALID_DATA: return "device response data invalid";
+  default: return "unknown error " + std::to_string(m_status);
+  }
 }
 
 py::dict CO2_5000::reading()
 {
   py::dict result;
-  result["status"] = status();
   result["timestamp"] = utc_now();
+  double ppm;
 
 #ifdef HAVE_CO2_5000
-  size_t n = write(m_fd, REQUEST_CO2.data(), REQUEST_CO2.size());
-  if (n != REQUEST_CO2.size())
-  {
-    throw std::runtime_error("invalid number of bytes written: "s + std::to_string(n));
-  }
-
-  delay(100); // give device time to respond
-
-  // e.g. 64 69 01 01 D5 9E 02 44 00 00 00 00 DA C2
-  //       0  1  2  3  4           8          12
-  std::array<uint8_t, 14> response;
-
-  n = read(m_fd, response.data(), response.size());
-  if (n != response.size())
-  {
-    throw std::runtime_error("invalid number of bytes read: "s + std::to_string(n));
-  }
-
-  if (!check_crc(response.data(),response.size()))
-  {
-    throw std::runtime_error("device response CRC invalid");
-  }
-
-  uint32_t error = as_uint32_t(response.data() + 8);
-  if (error)
-  {
-    throw std::runtime_error("device response data invalid, code "s + std::to_string(error));
-  }
-
-  result["co2"] = as_float(response.data() + 4);
-
+  m_status = read_impl(m_fd, ppm);
 #else
   // ramp up from 400 to 655 then back to 400
   static uint8_t counter = 0;
-  result["co2"] = 400.0 + counter;
+  ppm = 400.0 + counter;
   ++counter;
 #endif
 
+  result["status"] = status();
+  if (m_status == CO2_5000::OK)
+  {
+    result["co2"] = ppm;
+  }
   return result;
 }
