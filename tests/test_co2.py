@@ -1,5 +1,5 @@
 from dt_adapter import get_driver
-
+import os
 
 def test_co2_5000():
 
@@ -10,7 +10,11 @@ def test_co2_5000():
 
   assert sensor.type().startswith("CO2-5000")
 
-  assert sensor.id() == "testing123"
+  if os.getenv("HAVE_CO2_5000"):
+    assert sensor.id() != "testing123"
+  else:
+    assert sensor.id() == "testing123"
+
   assert sensor.status() == "OK"
 
   readings = sensor.read()
