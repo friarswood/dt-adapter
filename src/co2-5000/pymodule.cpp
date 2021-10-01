@@ -14,7 +14,7 @@ PYBIND11_MODULE(_co2_5000, m)
     .def("id", &CO2_5000::id, "Get sensor id")
     .def("type", &CO2_5000::type, "Get sensor type")
     .def("status", &CO2_5000::status, "Get sensor status")
-    .def("read", &CO2_5000::reading, "Read data from sensor");
+    .def("read", &CO2_5000::read, "Read data from sensor");
 
   m.def("crc", [](py::bytes b) {
     py::buffer_info info(py::buffer(b).request());

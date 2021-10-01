@@ -1,16 +1,14 @@
 #pragma once
 
-#include <pybind11/pybind11.h>
+#include "common/sensor.h"
 
 #include <array>
 #include <string>
 
-namespace py = pybind11;
-
 std::array<uint8_t, 2> calc_crc(const uint8_t *data, size_t len);
 bool check_crc(const uint8_t *data, size_t len);
 
-class CO2_5000 final
+class CO2_5000 final : public Sensor
 {
 public:
 
@@ -31,10 +29,10 @@ public:
   CO2_5000& operator=(const CO2_5000&) = delete;
   CO2_5000& operator=(CO2_5000&&) = delete;
 
-  py::str id() const;
-  py::str type() const;
-  py::str status() const;
-  py::dict reading();
+  py::str id() const override;
+  py::str type() const override;
+  py::str status() const override;
+  py::dict read() const override;
 
 private:
   std::string m_id;

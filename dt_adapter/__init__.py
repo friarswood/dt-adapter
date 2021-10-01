@@ -1,6 +1,10 @@
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 import os
+try:
+  from _common import *
+except ImportError as e:
+  print(e)
 try:
   import _pisensehat as pisensehat
 except ImportError as e:

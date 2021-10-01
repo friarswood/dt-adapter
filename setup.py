@@ -1,6 +1,7 @@
 import os
 from setuptools import find_packages, setup
 from pybind11.setup_helpers import Pybind11Extension, ParallelCompile
+from glob import glob
 
 
 def get_defines(env):
@@ -20,9 +21,15 @@ def get_libs(env):
 
 ext_modules = [
   Pybind11Extension(
+    '_common',
+    sources=["src/common/pymodule.cpp"],
+    depends=glob("src/common/*.h") + ["setup.py", "dt_adapter/__init__.py"],
+    cxx_std=17
+  ),
+  Pybind11Extension(
     '_pisensehat',
-    sources=["src/common/timestamp.cpp", "src/pisensehat/pymodule.cpp", "src/pisensehat/pisensehat.cpp"],
-    depends=["src/common/timestamp.h", "src/pisensehat/pisensehat.h", "src/pisensehat/RTIMULib_stub.h", "setup.py", "dt_adapter/__init__.py"],
+    sources=glob("src/pisensehat/*.cpp"),
+    depends=glob("src/common/*.h") + glob("src/pisensehat/*.h") + ["setup.py", "dt_adapter/__init__.py"],
     include_dirs=["src"],
     define_macros=get_defines("HAVE_PISENSEHAT"),
     extra_link_args=get_libs("HAVE_PISENSEHAT"),
@@ -30,8 +37,8 @@ ext_modules = [
   ),
   Pybind11Extension(
     '_co2_5000',
-    sources=["src/common/timestamp.cpp", "src/co2-5000/pymodule.cpp", "src/co2-5000/driver.cpp", "src/co2-5000/picpuserial.cpp"],
-    depends=["src/common/timestamp.h", "src/co2-5000/driver.h", "src/co2-5000/picpuserial.h" "setup.py", "dt_adapter/__init__.py"],
+    sources=["src/co2-5000/pymodule.cpp", "src/co2-5000/driver.cpp", "src/co2-5000/picpuserial.cpp"],
+    depends=glob("src/common/*.h") + glob("src/co2-5000/*.h") + ["setup.py", "dt_adapter/__init__.py"],
     include_dirs=["src", "/opt/vc/include"],
     define_macros=get_defines("HAVE_CO2_5000"),
     extra_link_args=get_libs("HAVE_CO2_5000"),

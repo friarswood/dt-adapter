@@ -1,18 +1,16 @@
 #pragma once
 
+#include "common/sensor.h"
+
 #ifdef HAVE_PISENSEHAT
 #include "RTIMULib.h"
 #else
 #include "RTIMULib_stub.h"
 #endif
 
-#include <pybind11/pybind11.h>
-
 #include <string>
 
-namespace py = pybind11;
-
-class PiSenseHat
+class PiSenseHat final : public Sensor
 {
 public:
 
@@ -25,13 +23,10 @@ public:
     static const value NO_IMU = 4;
   };
 
-  py::str id() const;
-
-  py::str type() const;
-
-  py::str status() const;
-
-  py::dict read() const;
+  py::str id() const override;
+  py::str type() const override;
+  py::str status() const override;
+  py::dict read() const override;
 
   PiSenseHat();
 
