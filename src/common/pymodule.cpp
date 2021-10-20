@@ -22,7 +22,7 @@ public:
 		PYBIND11_OVERLOAD_PURE(py::str, Sensor, type);
 	}
 
-	py::dict read() const override
+	py::dict read() override
   {
 		PYBIND11_OVERLOAD_PURE(py::dict, Sensor, read);
 	}
@@ -39,3 +39,4 @@ PYBIND11_MODULE(_common, m)
 
 	m.def("utc_now", &utc_now);
 }
+

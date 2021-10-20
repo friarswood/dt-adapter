@@ -26,7 +26,7 @@ public:
   py::str id() const override;
   py::str type() const override;
   py::str status() const override;
-  py::dict read() const override;
+  py::dict read() override;
 
   PiSenseHat();
 

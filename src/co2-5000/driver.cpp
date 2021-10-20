@@ -192,7 +192,7 @@ py::str CO2_5000::status() const
   }
 }
 
-py::dict CO2_5000::read() const
+py::dict CO2_5000::read()
 {
   py::dict result;
   result["timestamp"] = utc_now();

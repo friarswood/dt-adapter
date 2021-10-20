@@ -102,7 +102,7 @@ py::str PiSenseHat::status() const
   return PiSenseHat::statusToString(m_status);
 }
 
-py::dict PiSenseHat::read() const
+py::dict PiSenseHat::read()
 {
   py::dict result;
   result["status"] = PiSenseHat::statusToString(m_status);

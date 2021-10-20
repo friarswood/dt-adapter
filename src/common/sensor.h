@@ -17,7 +17,7 @@ public:
 
   virtual py::str status() const = 0;
 
-  virtual py::dict read() const = 0;
+  virtual py::dict read() = 0;
 
 };
 
