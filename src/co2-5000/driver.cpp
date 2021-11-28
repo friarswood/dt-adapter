@@ -145,11 +145,12 @@ uint8_t read_impl(int fd, double& ppm)
 
 CO2_5000::CO2_5000() : m_status(0)
 {
-  m_id = "d3c38f28";
 #ifdef HAVE_CO2_5000
+  m_id = "d3c38f28";
   // port/speed is hard-coded...
   m_fd = serialOpen("/dev/serial0", 9600);
 #else
+  m_id = "testing123";
   m_fd = 0;
 #endif
   if (m_fd < 0)
