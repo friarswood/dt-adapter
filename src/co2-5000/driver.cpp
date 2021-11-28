@@ -2,7 +2,7 @@
 // The seller (https://www.ebay.co.uk/itm/224540799740?hash=item3447acb2fc:g:EawAAOSwZt1gQvWr) provided a Chinese datasheet, which is included.
 
 #include "driver.h"
-#include "picpuserial.h"
+//#include "picpuserial.h"
 #include "common/timestamp.h"
 
 #ifdef HAVE_CO2_5000
@@ -145,7 +145,7 @@ uint8_t read_impl(int fd, double& ppm)
 
 CO2_5000::CO2_5000() : m_status(0)
 {
-  m_id = get_cpu_serialno();
+  m_id = "d3c38f28";
 #ifdef HAVE_CO2_5000
   // port/speed is hard-coded...
   m_fd = serialOpen("/dev/serial0", 9600);
