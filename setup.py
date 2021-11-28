@@ -12,7 +12,7 @@ def get_defines(env):
 def get_libs(env):
   libs = {
     "HAVE_PISENSEHAT": ["-lRTIMULib"],
-    "HAVE_CO2_5000": ["-L/opt/vc/lib", "-lbcm_host", "-lwiringPi"]
+    "HAVE_CO2_5000": ["-lwiringPi"]
   }
   if os.getenv(env):
     return libs.get(env)
@@ -37,7 +37,7 @@ ext_modules = [
   ),
   Pybind11Extension(
     '_co2_5000',
-    sources=["src/co2-5000/pymodule.cpp", "src/co2-5000/driver.cpp", "src/co2-5000/picpuserial.cpp"],
+    sources=["src/co2-5000/pymodule.cpp", "src/co2-5000/driver.cpp"],
     depends=glob("src/common/*.h") + glob("src/co2-5000/*.h") + ["setup.py", "dt_adapter/__init__.py"],
     include_dirs=["src", "/opt/vc/include"],
     define_macros=get_defines("HAVE_CO2_5000"),

@@ -196,10 +196,16 @@ py::dict CO2_5000::read()
 {
   py::dict result;
   result["timestamp"] = utc_now();
-  double ppm;
+  double ppm{0.0};
 
 #ifdef HAVE_CO2_5000
   m_status = read_impl(m_fd, ppm);
+  // try to recover by resetting serial if error
+  if (m_status != OK)
+  {
+    serialClose(m_fd);
+    m_fd = serialOpen("/dev/serial0", 9600);
+  }
 #else
   // ramp up from 400 to 655 then back to 400
   static uint8_t counter = 0;
@@ -214,3 +220,4 @@ py::dict CO2_5000::read()
   }
   return result;
 }
+
