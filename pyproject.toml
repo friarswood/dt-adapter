@@ -5,11 +5,11 @@ requires = [
   "pybind11>=2.6.0",
   "pytest"
 ]
-
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
+addopts = "-sv"
 testpaths = [
   "tests"
 ]
