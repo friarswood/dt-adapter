@@ -42,6 +42,5 @@ HAVE_PISENSEHAT=1 python setup.py develop
 or
 
 ```
-HAVE_CO2_5000 python setup.py develop
+HAVE_CO2_5000=1 python setup.py develop
 ```
-
